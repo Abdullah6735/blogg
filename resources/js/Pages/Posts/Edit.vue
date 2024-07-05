@@ -32,7 +32,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="image" class="form-label">Image</label>
-                  <input id="image" type="file" @change="e => form.image = e.target.files[0]" class="form-control">
+                  <input id="image" type="file" @change="handleFileChange" class="form-control">
                   <div v-if="form.errors.image" class="invalid-feedback">{{ form.errors.image }}</div>
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
@@ -46,26 +46,48 @@
     </AuthenticatedLayout>
   </template>
   
-  
-  <script setup>
-  import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-  import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
-  import { ref } from 'vue';
-  
-  const { props } = usePage();
-  const post = ref(props.post);
-  const categories = ref(props.categories);
-  
-  // Initializing form with default values from the post prop
-  const form = useForm({
-    title: post.value.title,
-    content: post.value.content,
-    category_id: post.value.category_id,
-    image: null,
+<script setup>
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
+
+const { props } = usePage();
+const post = ref(props.post);
+const categories = ref(props.categories);
+
+// Initializing form with default values from the post prop
+const form = useForm({
+  title: post.value.title,
+  content: post.value.content,
+  category_id: post.value.category_id,
+  image: null,
+});
+
+const handleFileChange = (e) => {
+  form.image = e.target.files[0];
+};
+
+const submit = () => {
+    const formData = new FormData();
+  formData.append('title', form.title);
+  formData.append('content', form.content);
+  formData.append('category_id', form.category_id);
+  if (form.image) {
+    formData.append('image', form.image);
+  }
+
+  form.post(route('posts.update', post.value.id), {
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    onSuccess: () => {
+      alert('Post updated successfully.');
+    },
+    onError: (errors) => {
+      console.error('Error updating post:', errors);
+      alert('Failed to update post.');
+    },
   });
-  
-  const submit = () => {
-    form.put(route('posts.update', post.value.id));
-  };
-  </script>
-  
+};
+</script>

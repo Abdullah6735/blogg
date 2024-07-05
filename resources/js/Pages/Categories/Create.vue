@@ -26,25 +26,28 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
   import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-  import { Inertia } from '@inertiajs/inertia';
-  
-  const form = ref({
-    name: '',
+import { useForm } from '@inertiajs/vue3';
+import { Inertia } from '@inertiajs/inertia';
+
+// Initialize form using useForm
+const form = useForm({
+  name: '',
+});
+
+// Handle form submission
+const submit = () => {
+  form.post('/categories', {
+    onSuccess: () => {
+      form.reset(); // Reset the form after successful submission
+      alert('Category added successfully.');
+      // Inertia.visit('/categories'); // Navigate to the categories index page
+    },
+    onError: (errors) => {
+      console.error('Error adding category:', errors);
+      alert('Failed to add category.');
+    },
   });
-  
-  const submit = () => {
-    Inertia.post('/categories', form.value, {
-      onSuccess: () => {
-        form.value.name = ''; // Reset the form
-        alert('Category added successfully.');
-      },
-      onError: (errors) => {
-        console.error('Error adding category:', errors);
-        alert('Failed to add category.');
-      },
-    });
-  };
+};
   </script>
   

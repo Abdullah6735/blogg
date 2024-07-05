@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +20,13 @@ use App\Http\Controllers\PostController;
 */
 
 Route::get('/', function () {
+    $posts = Post::all();
     return Inertia::render('Welcome', [
+        'posts' => $posts,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        // 'laravelVersion' => Application::VERSION,
-        // 'phpVersion' => PHP_VERSION,
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
     ]);
 });
 
@@ -32,13 +35,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/', [PostController::class, 'welcome'])->name('welcome');
     Route::resource('categories', CategoryController::class)->except(['edit', 'update']);
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::post('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::resource('posts', PostController::class)->except(['create', 'edit']);
 });
 

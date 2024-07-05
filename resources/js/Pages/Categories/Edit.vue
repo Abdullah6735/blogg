@@ -30,6 +30,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { Inertia } from '@inertiajs/inertia';
+
 
 const { props } = usePage();
 const category = props.category || {};
@@ -39,6 +41,14 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.put(route('categories.update', category.id));
+  form.put(route('categories.update', category.id), {
+    onSuccess: () => {
+      // Inertia.get(route('categories.index'));
+    },
+    onError: (errors) => {
+      console.error('Error updating category:', errors);
+      alert('Failed to update category.');
+    },
+  });
 };
 </script>

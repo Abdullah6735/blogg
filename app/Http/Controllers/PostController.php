@@ -54,19 +54,27 @@ class PostController extends Controller
     // Update an existing post
     public function update(Request $request, Post $post)
     {
-        $validatedData = $this->validatePost($request);
-
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+    
         if ($request->hasFile('image')) {
             // Delete the old image if it exists
             if ($post->image) {
                 Storage::disk('public')->delete($post->image);
             }
-            $validatedData['image'] = $this->handleImageUpload($request);
+            $validatedData['image'] = $request->file('image')->store('images', 'public');
+        } else {
+            // Preserve the old image if no new image is uploaded
+            unset($validatedData['image']);
         }
-
+    
         $post->fill($validatedData);
         $post->save();
-
+    
         return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
     }
 
@@ -81,7 +89,6 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
     }
 
-    // Validation logic for posts
     private function validatePost(Request $request)
     {
         return $request->validate([
@@ -95,21 +102,6 @@ class PostController extends Controller
     // Handle image upload
     private function handleImageUpload(Request $request)
     {
-        if ($request->hasFile('image')) {
-            return $request->file('image')->store('images', 'public');
-        }
-        return null;
-    }
-
-    public function welcome()
-    {
-        $posts = Post::all();
-        return Inertia::render('Welcome', [
-            'posts' => $posts,
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
+        return $request->file('image')->store('images', 'public');
     }
 }

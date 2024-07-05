@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { defineProps } from 'vue';
 
 defineProps({
     canLogin: {
@@ -16,7 +17,15 @@ defineProps({
         type: String,
         required: true,
     },
+    posts: {
+        type: Array,
+        required: true,
+    },
 });
+
+const getImageUrl = (imagePath) => {
+    return imagePath ? `/storage/${imagePath}` : '';
+};
 </script>
 
 <template>
@@ -40,13 +49,30 @@ defineProps({
                     >Log in</Link
                 >
 
-                <Link
+                <!-- <Link
                     v-if="canRegister"
                     :href="route('register')"
                     class="ms-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
                     >Register</Link
-                >
+                > -->
             </template>
+        </div>
+
+        <div class="container mt-5 text-center">
+        <h1 class="mb-4">Blog Posts</h1>
+        <div v-if="posts.length" class="list-group">
+            <a v-for="post in posts" :key="post.id" href="#" class="list-group-item list-group-item-action" @click.prevent>
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ post.title }}</h5>
+                    <!-- <small>3 days ago</small> -->
+                </div>
+                <img :src="getImageUrl(post.image)" alt="Post Image" class="img-fluid mb-2" v-if="post.image">
+                <p class="mb-1">{{ post.content }}</p>
+            </a>
+        </div>
+        <div v-else>
+            <p>No posts available.</p>
+        </div>
         </div>
 
         

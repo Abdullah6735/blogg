@@ -29,8 +29,8 @@ class CategoryController extends Controller
         ]);
 
         Category::create($validated);
-
-        return redirect()->back()->with('success', 'Category created successfully.');
+        
+        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 
     public function show($id)
@@ -61,7 +61,7 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->update($validated);
 
-        return redirect()->back()->with('success', 'Category updated successfully.');
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     public function destroy($id)
