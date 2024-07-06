@@ -28,6 +28,7 @@
                                     <td>{{ post.title }}</td>
                                     <td>
                                         <!-- Action buttons: Update, Delete -->
+                                        <Link :href="`/posts/${post.id}`" class="btn btn-sm btn-info mr-2">Show</Link>
                                         <Link :href="`/posts/${post.id}/edit`" class="btn btn-sm btn-warning mr-2">Edit</Link>
                                         <button @click="deletePost(post.id)" class="btn btn-sm btn-danger">Delete</button>
                                     </td>

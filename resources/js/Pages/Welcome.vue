@@ -61,14 +61,18 @@ const getImageUrl = (imagePath) => {
         <div class="container mt-5 text-center">
         <h1 class="mb-4">Blog Posts</h1>
         <div v-if="posts.length" class="list-group">
-            <a v-for="post in posts" :key="post.id" href="#" class="list-group-item list-group-item-action" @click.prevent>
+            <div v-for="post in posts" :key="post.id" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ post.title }}</h5>
+                    <Link :href="route('posts.show', post.id)">
+                            <h5 class="mb-1">{{ post.title }}</h5>
+                        </Link>
                     <!-- <small>3 days ago</small> -->
                 </div>
-                <img :src="getImageUrl(post.image)" alt="Post Image" class="img-fluid mb-2" v-if="post.image">
-                <p class="mb-1">{{ post.content }}</p>
-            </a>
+                <div class="d-flex justify-content-center mb-2">
+                        <img :src="getImageUrl(post.image)" alt="Post Image" class="img-fluid rounded" style="width: 400px;  object-fit: cover;">
+                    </div>
+                <p class="mb-1">{{ post.content.substring(0, 500) }}</p>
+            </div>
         </div>
         <div v-else>
             <p>No posts available.</p>
@@ -87,5 +91,11 @@ const getImageUrl = (imagePath) => {
     .dark\:bg-dots-lighter {
         background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
     }
+}
+.list-group-item {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 </style>

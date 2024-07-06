@@ -6,6 +6,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import Sidebar from '@/Components/Sidebar.vue';
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -142,11 +143,15 @@ const showingNavigationDropdown = ref(false);
                     <slot name="header" />
                 </div>
             </header>
-
+            <div class="container-fluid">
+                <div class="row">
+                    <Sidebar class="col-md-3 col-lg-2 d-md-block bg-light sidebar"/>
             <!-- Page Content -->
-            <main>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <slot />
             </main>
+        </div>
+    </div>
         </div>
     </div>
 </template>

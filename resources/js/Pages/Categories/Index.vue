@@ -57,9 +57,9 @@ console.log('Categories:', categories);
 // Function to delete category
 const deleteCategory = async (categoryId) => {
   if (confirm('Are you sure you want to delete this category?')) {
-    try {
       await Inertia.delete(`/categories/${categoryId}`);
-      alert('Category deleted successfully.');
+    try {
+    //   alert('Category deleted successfully.');
     } catch (error) {
       console.error('Error deleting category:', error);
       alert('Failed to delete category.');
