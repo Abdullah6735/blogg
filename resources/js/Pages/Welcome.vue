@@ -71,7 +71,7 @@ const getImageUrl = (imagePath) => {
                 <div class="d-flex justify-content-center mb-2">
                         <img :src="getImageUrl(post.image)" alt="Post Image" class="img-fluid rounded" style="width: 400px;  object-fit: cover;">
                     </div>
-                <p class="mb-1">{{ post.content.substring(0, 500) }}</p>
+                <p class="mb-1" v-html="post.content.substring(0, 999)"></p>
             </div>
         </div>
         <div v-else>

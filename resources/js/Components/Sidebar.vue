@@ -3,30 +3,31 @@
       <nav>
         <ul class="nav flex-column">
           <!-- Categories Dropdown -->
-          <!-- <li class="nav-item dropdown">
-            <a 
-              class="nav-link dropdown-toggle" 
-              href="#" 
-              id="categoriesDropdown" 
-              role="button" 
-              data-bs-toggle="dropdown" 
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="usersDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              Categories
+              Users
             </a>
-            <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
-              <li><Link class="dropdown-item" :href="route('categories.index')">All Categories</Link></li>
-              <li><Link class="dropdown-item" :href="route('categories.create')">Add New Category</Link></li>
+            <ul class="dropdown-menu" aria-labelledby="usersDropdown">
+                <li><Link class="dropdown-item" :href="route('users.index')">Users</Link></li>
+              <!-- <li><Link class="dropdown-item" :href="route('categories.index')">All Categories</Link></li>
+              <li><Link class="dropdown-item" :href="route('categories.create')">Add New Category</Link></li> -->
             </ul>
-          </li> -->
-          <!-- Posts Dropdown -->
+          </li>
+
           <li class="nav-item dropdown">
-            <a 
-              class="nav-link dropdown-toggle" 
-              href="#" 
-              id="postsDropdown" 
-              role="button" 
-              data-bs-toggle="dropdown" 
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="postsDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
               aria-expanded="false"
             >
               Posts
@@ -41,15 +42,19 @@
       </nav>
     </div>
   </template>
-  
+
   <script setup>
   import { Link, usePage } from '@inertiajs/vue3';
   const { props } = usePage();
+
+  function canAccess(permission) {
+    return props.auth?.permissions?.includes(permission) || false;
+}
+
   </script>
-  
+
   <style scoped>
   .nav-link.active {
     font-weight: bold;
   }
   </style>
-  

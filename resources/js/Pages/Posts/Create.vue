@@ -17,10 +17,19 @@
                   <div v-if="form.errors.title" class="invalid-feedback">{{ form.errors.title }}</div>
                 </div>
                 <div class="mb-3">
-                  <label for="content" class="form-label">Content</label>
-                  <textarea id="content" v-model="form.content" class="form-control" rows="5" required></textarea>
-                  <div v-if="form.errors.content" class="invalid-feedback">{{ form.errors.content }}</div>
-                </div>
+                <label for="content" class="form-label">Content</label>
+                <editor
+                  v-model="form.content"
+                  api-key="non28mlrfl05uqjcjm2fxsij9lqwcwn6ec1dsk0laj1we2rz"
+                  :init="{
+                    height: 300,
+                    menubar: false,
+                    plugins: 'link image code',
+                    toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | code'
+                  }"
+                />
+                <div v-if="form.errors.content" class="invalid-feedback">{{ form.errors.content }}</div>
+              </div>
                 <div class="mb-3">
                   <label for="category_id" class="form-label">Category</label>
                   <select id="category_id" v-model="form.category_id" class="form-select" required>
@@ -49,6 +58,7 @@
   <script setup>
   import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
   import { Link, useForm, usePage } from '@inertiajs/vue3';
+  import Editor from '@tinymce/tinymce-vue';
   
   const { props } = usePage();
   const categories = props.categories || [];

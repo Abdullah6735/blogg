@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use App\Models\Post;
 
 /*
@@ -31,19 +32,34 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $user = auth()->user();
+    $permissions = $user->getAllPermissions()->pluck('name');
+    return Inertia::render('Dashboard', [
+        'auth' => [
+            'user' => $user,
+            'permissions' => $permissions,
+        ],
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::resource('categories', CategoryController::class)->except(['edit', 'update']);
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
-    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
-    Route::post('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-    Route::resource('posts', PostController::class)->except(['create', 'edit']);
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('users', UserController::class);
 });
+
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::post('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::resource('posts', PostController::class)->except(['show', 'update']);
+    Route::resource('categories', CategoryController::class);
+    // Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    // Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    // Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    // Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
+    // Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+
+});
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

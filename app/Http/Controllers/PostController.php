@@ -27,9 +27,13 @@ class PostController extends Controller
     {
         $validatedData = $this->validatePost($request);
 
+        if ($request->hasFile('image')) {
         $imagePath = $this->handleImageUpload($request);
 
         $post = Post::create(array_merge($validatedData, ['image' => $imagePath]));
+        } else {
+            $post = Post::create($validatedData);
+        }
 
         return redirect()->route('posts.index')->with('success', 'Post created successfully.');
     }
@@ -81,6 +85,7 @@ class PostController extends Controller
     // Delete a post
     public function destroy(Post $post)
     {
+        $post = Post::findOrFail($post->id);
         if ($post->image) {
             Storage::disk('public')->delete($post->image);
         }
